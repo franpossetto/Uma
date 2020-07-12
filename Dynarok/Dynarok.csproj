@@ -35,6 +35,10 @@
     <Reference Include="DynamoCore">
       <HintPath>..\..\..\..\..\..\Program Files\Dynamo\Dynamo Core\2\DynamoCore.dll</HintPath>
     </Reference>
+    <Reference Include="DynamoServices, Version=2.0.3.8810, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Dynamo\Dynamo Core\2\DynamoServices.dll</HintPath>
+    </Reference>
     <Reference Include="RevitAPI">
       <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
     </Reference>
