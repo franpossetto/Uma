@@ -42,31 +42,40 @@ namespace Revit
         }
 
         [NodeCategory("Query")]
-        [MultiReturn(new[] { "Name", "Class" })]
-        public static Dictionary<string, string> GetIdentityProperties(Revit.Elements.Material material)
+        [MultiReturn(new[] { "Name", "Class", "Category", "AppearenceAssetId", "Color" })]
+        public static Dictionary<string, dynamic> GetProperties(RevitElements.Material Material)
         {
-            Dictionary<string, string> result = new Dictionary<string, string>();
+            Dictionary<string, dynamic> result = new Dictionary<string, dynamic>();
             Autodesk.Revit.DB.Document doc = DocumentManager.Instance.CurrentDBDocument;
             FilteredElementCollector collector = new FilteredElementCollector(doc);
+            DB.Material mat = (DB.Material)Material.InternalElement;
 
-            result["Name"] = material.Name;
-            result["Class"] = material.MaterialClass;
-            
+            result["Name"] = mat.Name;
+            result["Class"] = mat.MaterialClass;
+            result["Category"] = mat.MaterialCategory;
+            result["AppearenceAssetId"] = mat.AppearanceAssetId;
+
+            Dictionary<string, double> colors = new Dictionary<string, double>();
+            colors["Red"] = mat.Color.Red;
+            colors["Green"] = mat.Color.Green;
+            colors["Blue"] = mat.Color.Blue;
+            result["Color"] = colors;
 
             return result;
         }
 
         [NodeCategory("Actions")]
-        public static RevitElements.Element SetIdentityProperties(RevitElements.Material material, string name = "", string @class= "")
+        public static RevitElements.Element SetProperties(RevitElements.Material Material, string Name = "", string @Class= "", string Category = "")
         {
 
             DB.Document doc = DocumentManager.Instance.CurrentDBDocument;
-            DB.Material mat = (DB.Material) material.InternalElement;
+            DB.Material mat = (DB.Material) Material.InternalElement;
 
             TransactionManager.Instance.EnsureInTransaction(doc);
 
-            if (name != null && name != "") mat.Name = name;
-            if ( @class != null) mat.MaterialClass = @class;
+            if (Name != null && Name != "") mat.Name = Name;
+            if ( @Class != null) mat.MaterialClass = @Class;
+            if (@Class != null) mat.MaterialCategory = Category;
 
             TransactionManager.Instance.TransactionTaskDone();
 
