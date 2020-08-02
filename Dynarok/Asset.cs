@@ -28,8 +28,6 @@ namespace Revit
             DB.Visual.AssetProperty assetProp = assetList[0].FindByName("BaseSchema");
             DB.Visual.AssetProperty assetProp2 = assetList[0].FindByName("SatinBaseSchema");
 
-
-
             DB.AppearanceAssetElement appearanceAssetElement = null;
 
             TransactionManager.Instance.EnsureInTransaction(doc);
