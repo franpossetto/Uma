@@ -17,7 +17,7 @@ namespace Revit
         private Element() { }
 
         [NodeCategory("Actions")]
-        public static List<RevitElements.Element> GetRoom(Revit.Elements.Element Element)
+        public static RevitElements.Element GetRoom(Revit.Elements.Element Element)
         {
             List<RevitElements.Element> result = new List<RevitElements.Element>();
             DB.Document doc = DocumentManager.Instance.CurrentDBDocument;
@@ -31,13 +31,12 @@ namespace Revit
             
             DB.FamilyInstance familyInstance = (DB.FamilyInstance)Element.InternalElement;
 
-
             LocationPoint familyInstanceLocationPoint = familyInstance.Location as LocationPoint;
             XYZ point = familyInstanceLocationPoint.Point;
 
             DB.Architecture.Room room = rooms.Where(x => x.IsPointInRoom(point)).FirstOrDefault();
-            result.Add(room.ToDSType(true));
-            return result;
+            return room.ToDSType(true);
+ 
         }
     }
 }
