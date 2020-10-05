@@ -89,7 +89,7 @@ namespace Revit
         }
 
         [NodeCategory("Action")]
-        public static List<string> SetTintColorByMaterial (Revit.Elements.Element Material, DSCore.Color color)
+        public static List<string> SetTintColorByMat (Revit.Elements.Element Material, DSCore.Color color)
         {
 
             List<string> output = new List<string>();
