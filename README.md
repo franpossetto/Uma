@@ -1,2 +1,2 @@
-# Dynarok
-If the final battle exists, you might need this nodes. 
+# Uma for Dynamo
+A collection of nodes for Dynamo 
