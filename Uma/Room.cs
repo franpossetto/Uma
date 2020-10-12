@@ -18,6 +18,7 @@ namespace Revit
     {
         private Room() { }
 
+        [NodeCategory("Actions")]
         public static List<Revit.Elements.Element> GetElementsByCategory(Revit.Elements.Element Room, Revit.Elements.Category category)
         {
             DB.Document doc = DocumentManager.Instance.CurrentDBDocument;
