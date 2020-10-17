@@ -7,12 +7,15 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.ApplicationServices;
 using System.Reflection;
 using Autodesk.Revit.UI;
+using Dynamo.Graph.Nodes;
+
 namespace Revit
 {
     public class RevitAPI
     {
         private RevitAPI() { }
 
+        [NodeCategory("Actions")]
         public static dynamic RunStaticMethod(string ClassName, string Method, string[] Parameters)
         {
                try

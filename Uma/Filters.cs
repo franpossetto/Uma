@@ -144,6 +144,22 @@ namespace Revit
             return filterRulesEvaluatorType;
         }
 
+        public static string CreateFilterRule(string Method, string[] Parameters)
+        {
+            try
+            {
+                object filterRule = typeof(ParameterFilterRuleFactory)
+                        .GetMethod(Method)
+                        .Invoke(null, Parameters);
+                if (filterRule != null) return "Filter Rule created";
+                else return "Something happened";
+            }
+            catch (Exception e)
+            {
+                return e.ToString();
+            }
+        }
+
         //Private Method
         private static string CastFilterRule(FilterRule r)
         {
@@ -211,5 +227,7 @@ namespace Revit
             
             return null;
         }
+
+
     }
 }
