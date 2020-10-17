@@ -74,7 +74,6 @@ namespace Revit
             return false;
         }
 
-
         [NodeCategory("Actions")]
         public static Boolean Hide(Boolean Run)
         {
@@ -103,7 +102,7 @@ namespace Revit
             }
             return false;
         }
-
+        [NodeCategory("Actions")]
         public static Boolean Show(Boolean Run)
         {
             if (!Run) return false;
@@ -131,6 +130,7 @@ namespace Revit
             }
             return false;
         }
+        [NodeCategory("Actions")]
         public static Boolean Switch(Boolean Run)
         {
             if (!Run) return false;
