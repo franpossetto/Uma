@@ -115,43 +115,101 @@ namespace Revit
                 ElementParameterFilter epf = ef as ElementParameterFilter;
                 foreach (FilterRule r in epf.GetRules())
                 {
-                    if (r is FilterStringRule)
-                    {
-                        FilterStringRule filterRule = r as FilterStringRule;
-                        FilterStringRuleEvaluator evaluator = filterRule.GetEvaluator();
-                        if (filterRule.GetEvaluator() is FilterStringBeginsWith) filterRulesEvaluatorType.Add("FilterStringBeginsWith");
-                        else if (filterRule.GetEvaluator() is FilterStringContains) filterRulesEvaluatorType.Add("FilterStringContains");
-                        else if (filterRule.GetEvaluator() is FilterStringEndsWith) filterRulesEvaluatorType.Add("FilterStringEndsWith");
-                        else if (filterRule.GetEvaluator() is FilterStringEquals) filterRulesEvaluatorType.Add("FilterStringEquals");
-                        else if (filterRule.GetEvaluator() is FilterStringGreaterOrEqual) filterRulesEvaluatorType.Add("FilterStringGreaterOrEqual");
-                        else if (filterRule.GetEvaluator() is FilterStringLess) filterRulesEvaluatorType.Add("FilterStringLess");
-                        else if (filterRule.GetEvaluator() is FilterStringLessOrEqual) filterRulesEvaluatorType.Add("FilterStringLessOrEqual");
-                    }
-                    else if (r is FilterIntegerRule || r is FilterDoubleRule || r is FilterGlobalParameterAssociationRule)
-                    {
-                        FilterIntegerRule filterRule = r as FilterIntegerRule;
-                        FilterNumericRuleEvaluator evaluator = filterRule.GetEvaluator();
-                        if (filterRule.GetEvaluator() is FilterNumericEquals) filterRulesEvaluatorType.Add("FilterNumericEquals");
-                        else if (filterRule.GetEvaluator() is FilterNumericGreater) filterRulesEvaluatorType.Add("FilterNumericGreater");
-                        else if (filterRule.GetEvaluator() is FilterNumericGreaterOrEqual) filterRulesEvaluatorType.Add("FilterNumericGreaterOrEqual");
-                        else if (filterRule.GetEvaluator() is FilterNumericLess) filterRulesEvaluatorType.Add("FilterNumericLess");
-                        else if (filterRule.GetEvaluator() is FilterNumericLessOrEqual) filterRulesEvaluatorType.Add("FilterNumericLessOrEqual");
-                    }
-                    else if (r is FilterInverseRule)
-                    {
-                        FilterInverseRule filterRule = r as FilterInverseRule;
-                        FilterRule innerRule = filterRule.GetInnerRule();
-                        filterRulesEvaluatorType.Add("InnerRule");
-                    }
-                    else if (r is SharedParameterApplicableRule)
-                    {
-                        filterRulesEvaluatorType.Add("SharedParameterApplicableRule");
-                    };
+                    string ruleType = CastFilterRule(r);
+                    filterRulesEvaluatorType.Add(ruleType);
                 }
             }
             return filterRulesEvaluatorType;
         }
-       
+        [NodeCategory("Actions")]
+        public static List<string> GetFilterRuleMethod(RevitElements.Element ParameterFilterElement)
+        {
+            DB.Document doc = DocumentManager.Instance.CurrentDBDocument;
+            List<string> filterRulesEvaluatorType = new List<string>();
 
+            DB.ParameterFilterElement parameterFilterElement = (DB.ParameterFilterElement)ParameterFilterElement.InternalElement;
+            ElementLogicalFilter elementFilter = parameterFilterElement.GetElementFilter() as ElementLogicalFilter;
+
+            IList<ElementFilter> efs = elementFilter.GetFilters();
+
+            foreach (ElementFilter ef in efs)
+            {
+                ElementParameterFilter epf = ef as ElementParameterFilter;
+                foreach (FilterRule r in epf.GetRules())
+                {
+                    string ruleMethod = FilterRuleMethod(CastFilterRule(r));
+                    filterRulesEvaluatorType.Add(ruleMethod);
+                }
+            }
+            return filterRulesEvaluatorType;
+        }
+
+        //Private Method
+        private static string CastFilterRule(FilterRule r)
+        {
+            if (r is FilterStringRule)
+            {
+                FilterStringRule filterRule = r as FilterStringRule;
+                FilterStringRuleEvaluator evaluator = filterRule.GetEvaluator();
+                if (filterRule.GetEvaluator() is FilterStringBeginsWith) return "FilterStringBeginsWith";
+                else if (filterRule.GetEvaluator() is FilterStringContains) return "FilterStringContains";
+                else if (filterRule.GetEvaluator() is FilterStringEndsWith) return "FilterStringEndsWith";
+                else if (filterRule.GetEvaluator() is FilterStringEquals) return "FilterStringEquals";
+                else if (filterRule.GetEvaluator() is FilterStringGreaterOrEqual) return "FilterStringGreaterOrEqual";
+                else if (filterRule.GetEvaluator() is FilterStringLess) return "FilterStringLess";
+                else if (filterRule.GetEvaluator() is FilterStringLessOrEqual) return "FilterStringLessOrEqual";
+            }
+            else if (r is FilterIntegerRule || r is FilterDoubleRule || r is FilterGlobalParameterAssociationRule)
+            {
+                FilterIntegerRule filterRule = r as FilterIntegerRule;
+                FilterNumericRuleEvaluator evaluator = filterRule.GetEvaluator();
+                if (filterRule.GetEvaluator() is FilterNumericEquals) return"FilterNumericEquals";
+                else if (filterRule.GetEvaluator() is FilterNumericGreater) return "FilterNumericGreater";
+                else if (filterRule.GetEvaluator() is FilterNumericGreaterOrEqual) return "FilterNumericGreaterOrEqual";
+                else if (filterRule.GetEvaluator() is FilterNumericLess) return "FilterNumericLess";
+                else if (filterRule.GetEvaluator() is FilterNumericLessOrEqual) return "FilterNumericLessOrEqual";
+            }
+            else if (r is FilterInverseRule)
+            {
+                FilterInverseRule filterRule = r as FilterInverseRule;
+                FilterRule innerRule = filterRule.GetInnerRule();
+                return CastFilterRule(innerRule) + "_InnerRule";
+            }
+            else if (r is SharedParameterApplicableRule)
+            {
+                return "SharedParameterApplicableRule";
+            };
+            return null;
+        }
+
+        private static string FilterRuleMethod(string FilterRuleEvaluatorType)
+        {
+            if (FilterRuleEvaluatorType      == "FilterStringBeginsWith") return "CreateBeginsWithRule"; // 1
+            else if (FilterRuleEvaluatorType == "FilterStringContains") return "CreateContainsRule";
+            else if (FilterRuleEvaluatorType == "FilterStringEndsWith") return "CreateEndsWithRule";
+            else if (FilterRuleEvaluatorType == "FilterStringGreaterOrEqual") return "CreateGreaterOrEqualRule";
+            else if (FilterRuleEvaluatorType == "FilterStringLess") return "CreateLessRule";
+            else if (FilterRuleEvaluatorType == "FilterStringLessOrEqual") return "CreateLessOrEqualRule";
+            else if (FilterRuleEvaluatorType == "FilterStringEquals") return "CreateEqualsRule";
+            
+            else if (FilterRuleEvaluatorType == "FilterNumericEquals") return "CreateEqualsRule";
+            else if (FilterRuleEvaluatorType == "FilterNumericGreater") return "CreateGreaterRule";
+            else if (FilterRuleEvaluatorType == "FilterNumericGreaterOrEqual") return "CreateGreaterOrEqualRule";
+            else if (FilterRuleEvaluatorType == "FilterNumericLess") return "CreateLessRule";
+            else if (FilterRuleEvaluatorType == "FilterNumericLessOrEqual") return "CreateLessOrEqualRule";
+
+            //Inverse Method
+            else if (FilterRuleEvaluatorType == "FilterStringBeginsWith_InnerRule") return "CreateNotBeginsWithRule";
+            else if (FilterRuleEvaluatorType == "FilterStringContains_InnerRule") return "CreateNotContainsRule";
+            else if (FilterRuleEvaluatorType == "FilterStringEndsWith_InnerRule") return "CreateNotEndsWithRule";
+            else if (FilterRuleEvaluatorType == "FilterNumericEquals_InnerRule") return "CreateNotEqualsRule";
+            else if (FilterRuleEvaluatorType == "FilterStringLess_InnerRule") return "CreateLessRule";
+            else if (FilterRuleEvaluatorType == "FilterStringLessOrEqual_InnerRule") return "CreateLessOrEqualRule";
+
+            else if (FilterRuleEvaluatorType == "SharedParameterApplicableRule") return "CreateSharedParameterApplicableRule";
+            else if (FilterRuleEvaluatorType == "SharedParameterApplicableRule_InnerRule") return "CreateLessOrEqualRule";
+            
+            return null;
+        }
     }
 }
