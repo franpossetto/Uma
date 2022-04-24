@@ -58,13 +58,13 @@ namespace Revit
 
                 try
                 {
-                View activeView = doc.ActiveView;
-                PointCloudOverrides overrides = activeView.GetPointCloudOverrides();
-                PointCloudColorSettings pointCloudColorSettings = new PointCloudColorSettings();
-                TransactionManager.Instance.EnsureInTransaction(doc);
-                overrides.SetPointCloudScanOverrideSettings(pointCloud.Id, pt_cloud_settings);
-                TransactionManager.Instance.TransactionTaskDone();
-                return true;
+                    View activeView = doc.ActiveView;
+                    PointCloudOverrides overrides = activeView.GetPointCloudOverrides();
+                    PointCloudColorSettings pointCloudColorSettings = new PointCloudColorSettings();
+                    TransactionManager.Instance.EnsureInTransaction(doc);
+                    overrides.SetPointCloudScanOverrideSettings(pointCloud.Id, pt_cloud_settings);
+                    TransactionManager.Instance.TransactionTaskDone();
+                    return true;
                 }
                 catch
                 {
@@ -103,7 +103,7 @@ namespace Revit
             return false;
         }
         [NodeCategory("Actions")]
-        public static Boolean Show(Boolean Run) 
+        public static Boolean Show(Boolean Run)
         {
             if (!Run) return false;
             DB.Document doc = DocumentManager.Instance.CurrentDBDocument;
@@ -165,7 +165,8 @@ namespace Revit
         [NodeCategory("Actions")]
         public static Boolean HideInView(Revit.Elements.Element view, Boolean Run)
         {
-            
+
             return false;
         }
+    }
 }
