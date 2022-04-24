@@ -103,7 +103,7 @@ namespace Revit
             return false;
         }
         [NodeCategory("Actions")]
-        public static Boolean Show(Boolean Run)
+        public static Boolean Show(Boolean Run) 
         {
             if (!Run) return false;
             DB.Document doc = DocumentManager.Instance.CurrentDBDocument;
@@ -158,6 +158,14 @@ namespace Revit
                 }
             }
             return false;
+
+
         }
-    }
+
+        [NodeCategory("Actions")]
+        public static Boolean HideInView(Revit.Elements.Element view, Boolean Run)
+        {
+            
+            return false;
+        }
 }
