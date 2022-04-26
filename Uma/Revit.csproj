@@ -77,6 +77,7 @@
     <Compile Include="RevitAPI.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Filters.cs" />
+    <Compile Include="Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
